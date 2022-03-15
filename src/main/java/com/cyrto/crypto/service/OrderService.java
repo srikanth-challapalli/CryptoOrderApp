@@ -21,6 +21,10 @@ public class OrderService {
 	@Autowired
 	private OrderRepository orderRepo;
 	
+	
+	/*
+	 * All these Async methods will return proxy objects of type ComplitableFuture. 
+	 */
 	@Async
 	public CompletableFuture<Orders> createOrder(Orders order) {
 		return CompletableFuture.completedFuture(saveOrder(order));
@@ -69,7 +73,8 @@ public class OrderService {
 		return CompletableFuture.completedFuture("Order with "+orderId+" deleted");
 	}
 
-	public List<Orders> getSummaryInfo(CoinType type) {
+	@Async
+	public CompletableFuture<List<Orders>> getSummaryInfo(CoinType type) {
 		List<Orders> resultList = new ArrayList<>();
 		Map<Double,Orders> summaryMap = new HashMap<>();
 		List<Orders> listOfOrders = orderRepo.findOrdersByCoinType(type.getType());
@@ -86,7 +91,7 @@ public class OrderService {
 				resultList.add(order);
 			}
 		}
-		return resultList;
+		return  CompletableFuture.completedFuture(resultList);
 	}
 	
 	
