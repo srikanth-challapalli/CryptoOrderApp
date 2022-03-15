@@ -57,9 +57,9 @@ public class OrderService {
 			oldOrder.setType(order.getType());
 			oldOrder.setPricePerUnit(order.getPricePerUnit());
 			oldOrder.setOrderQuantity(order.getOrderQuantity());
-			orderRepo.save(oldOrder);
+			oldOrder = orderRepo.save(oldOrder);
 		}
-		return CompletableFuture.completedFuture(orderRepo.save(oldOrder));
+		return CompletableFuture.completedFuture(oldOrder);
 		
 	}
 	
