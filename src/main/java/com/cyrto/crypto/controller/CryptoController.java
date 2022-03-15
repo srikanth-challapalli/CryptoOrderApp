@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cyrto.crypto.entity.Orders;
+import com.cyrto.crypto.model.CoinType;
 import com.cyrto.crypto.service.OrderService;
 
 @RestController
@@ -34,9 +35,10 @@ public class CryptoController {
 		return responseOrder;
 	}
 	
-	@GetMapping("/getordersummary")
-	public List<Orders> getSummary(){
-		
+	@GetMapping("/getordersummary/{type}")
+	public List<Orders> getSummaryByCoinType(@PathVariable CoinType type){
+		List<Orders> listOfOrders = service.getSummaryInfo(type);
+		return listOfOrders;
 	}
 	
 	

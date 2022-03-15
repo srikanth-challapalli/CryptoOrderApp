@@ -3,11 +3,15 @@ package com.cyrto.crypto.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import com.cyrto.crypto.model.CoinType;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,10 +30,12 @@ public class Orders {
 	@Setter
 	@Getter
 	@Column
-	private long orderId;
+	@JsonInclude(Include.NON_NULL)
+	private Long orderId;
 	@Setter
 	@Getter
 	@Column(name="Coin_type")
+	@Enumerated(EnumType.STRING)
 	private CoinType type;
 	@Setter
 	@Getter
@@ -50,7 +56,7 @@ public class Orders {
 	@Setter
 	@Getter
 	@Column(name = "active")
-	private String status;
+	private String active;
 }
 
 

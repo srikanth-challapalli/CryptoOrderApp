@@ -1,6 +1,9 @@
 package com.cyrto.crypto.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -10,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.cyrto.crypto.dao.OrderRepository;
 import com.cyrto.crypto.entity.Orders;
+import com.cyrto.crypto.model.CoinType;
 
 @Service
 public class OrderService {
@@ -63,6 +67,26 @@ public class OrderService {
 	public CompletableFuture<String> removeOrderById(long orderId) {
 		orderRepo.deleteById(orderId);
 		return CompletableFuture.completedFuture("Order with "+orderId+" deleted");
+	}
+
+	public List<Orders> getSummaryInfo(CoinType type) {
+		List<Orders> resultList = new ArrayList<>();
+		Map<Double,Orders> summaryMap = new HashMap<>();
+		List<Orders> listOfOrders = orderRepo.findOrdersByCoinType(type.getType());
+		for(Orders order: listOfOrders) {
+			Orders existingOrder = summaryMap.get(order.getPricePerUnit());
+			if(existingOrder==null) {
+				summaryMap.put(order.getPricePerUnit(), order);
+			}else {
+				double totalPrice = (existingOrder.getPricePerUnit() * existingOrder.getOrderQuantity()+ order.getPricePerUnit() * order.getOrderQuantity());
+				long totalQuantity = existingOrder.getOrderQuantity() + order.getOrderQuantity();
+				order.setOrderId(null);
+				order.setOrderQuantity(totalQuantity);
+				order.setPricePerUnit(totalPrice);
+				resultList.add(order);
+			}
+		}
+		return resultList;
 	}
 	
 	
